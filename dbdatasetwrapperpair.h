@@ -4,9 +4,26 @@
 #include "dbdatasetwrapper.h"
 
 /*!
-    The DBDatasetWrapperPair class implement dataset wrapper made of
-    two dataset wrappers. It is useful if dataset contains master dataset
-    related with one to one relation with two detail datasets. 
+    The DBDatasetWrapperPair is a class template implementing dataset wrapper made of
+    two dataset wrappers. DBDatasetWrapperPair::read() performes read from both wrappers,
+    used when creating DBDatasetWrapperPair instance.
+    
+    Template parameters.
+    Dataset - class implementing functionality of presenting data, retrieved by SQL
+    query or stored procedure call, as a container of records supporting forward record
+    iteration. Examples of such classes: QSqlQuery in Qt library, TQuery in VCL library.
+    
+    Usage scenario.
+    DBDatasetWrapperPair is used when reading from queries, made by joining master table
+    with several detail tables. For example, let query join Master table with tables 
+    Detail1, Detail2. Let Detail1Wrapper and Detail2Wrapper be dataset wrappers for tables
+    Detail1 and Detail2. Then DBMasterWrapper descendant for Master table can implement
+    detailWrapper(...) as follows:
+    DBDatasetWrapper* MasterWrapper::detailWrapper(Object& obj) 
+    {
+        return new DBDatasetWrapperPair<SomeDataset>(new Detail1Wrapper(...), new Detail2Wrapper(...), true);
+    }
+    By nesting DBDatasetWrapperPair instances it is possible to join as many tables as required.
 */
 template <class Dataset>
 class DBDatasetWrapperPair : public DBDatasetWrapper<Dataset>
@@ -20,8 +37,7 @@ public:
         Creates dataset wrapper from two dataset wrappers.
         @param[in] wrapper1 First wrapper.
         @param[in] wrapper2 Second wrapper.
-        @param[in] own True if DBDatasetWrapperPair must take ownership of
-        passed wrappers.
+        @param[in] own True if DBDatasetWrapperPair shoud take ownership of wrapper1 and wrapper2.        
      */
     DBDatasetWrapperPair(DBDatasetWrapper<Dataset>* wrapper1, DBDatasetWrapper<Dataset>* wrapper2, bool own)
         :DBDatasetWrapper<Dataset>(wrapper1->dataset())
@@ -50,12 +66,18 @@ public:
         bool r2 = m_w2->read();
         return  r1 && r2;
     };
-           
+    /*!
+        Gets first wrapper.        
+        @return Pointer to first wrapper.
+    */
     DBDatasetWrapper<Dataset>* first()
     {
         return m_w1;
     };
-    
+    /*!
+        Gets second wrapper.        
+        @return Pointer to second wrapper.
+    */
     DBDatasetWrapper<Dataset>* second()
     {
         return m_w2;
