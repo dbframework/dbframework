@@ -111,7 +111,7 @@ public:
         m_map = storage;
     };
     
-    virtual ~DBMasterWrapperAbstract();
+    virtual ~DBMasterWrapperAbstract(){};
     /*!
         Reads data from the dataset record.
         Suppose that dataset is produced by SELECT SQL-query joining two tables: Master

@@ -123,7 +123,7 @@ public:
         when primary key is defined automatically by the DBMS.
         @return Query text or empty string in case of error.
      */
-    String insertQuery(const DBObjectWrapper<Dataset, String, Key>& binder, bool withKeyFields)
+    String insertQuery(const DBObjectWrapperAbstract<Dataset, String, Key>& binder, bool withKeyFields)
     {
         String result;
         if (binder.fieldCount() + binder.keyFieldCount() > 0) {
@@ -166,7 +166,7 @@ public:
         @param[in] binder Object wrapper to use.        
         @return Query text or empty string in case of error.
      */
-    String updateQuery(const DBObjectWrapper<Dataset, String, Key>& binder)
+    String updateQuery(const DBObjectWrapperAbstract<Dataset, String, Key>& binder)
     {
         String result;
         if ((binder.keyFieldCount() > 0) && (binder.fieldCount() > 0)) {
@@ -197,7 +197,7 @@ public:
         @param[in] binder Object wrapper to use.        
         @return Query text or empty string in case of error.
      */
-    String deleteQuery(const DBObjectWrapper<Dataset, String, Key>& binder)
+    String deleteQuery(const DBObjectWrapperAbstract<Dataset, String, Key>& binder)
     {
         String result;
         if (binder.keyFieldCount() > 0) {
