@@ -78,7 +78,7 @@ public:
      */
     bool read()
     {
-        return ObjectWrapper(m_data).read(*dataset());
+        return ObjectWrapper(m_data).read(*DBDatasetWrapper<Dataset>::dataset());
     }
 };
 

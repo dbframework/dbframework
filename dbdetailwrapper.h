@@ -112,7 +112,7 @@ public:
     {
         bool result = false;
         Object p;
-        result = ObjectWrapper(&p).read(*dataset());        
+        result = ObjectWrapper(&p).read(*DBDatasetWrapper<Dataset>::dataset());        
         if (result)            
             m_data->insert(m_data->end(), p);        
         return result;
@@ -176,7 +176,7 @@ public:
     {
         bool result = false;
         ObjectPtr p(new Object);
-        result = ObjectWrapper(p.get()).read(*dataset());
+        result = ObjectWrapper(p.get()).read(*DBDatasetWrapper<Dataset>::dataset());
         if (result)
             m_data->insert(m_data->end(), p);           
         return result;

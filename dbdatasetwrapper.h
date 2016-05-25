@@ -65,7 +65,7 @@ public:
         @return True on successfull read.
     */
     virtual bool read() = 0;    
-    typedef std::shared_ptr<DBDatasetWrapper> DBDatasetWrapperPtr;
+    typedef std::shared_ptr<DBDatasetWrapper<Dataset> > DBDatasetWrapperPtr;
 };
 
 }

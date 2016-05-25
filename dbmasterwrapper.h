@@ -99,7 +99,7 @@ protected:
     /*!
         Pointer to AssosiativeContainer instance. 
      */
-    Map* m_map;
+    AssosiativeContainer* m_map;
     /*!
         WrapperAssosiativeContainer instance.
      */
@@ -112,7 +112,7 @@ protected:
         @param[in] obj Object representing Master record.
         @return Pointer to allocated wrapper.
      */
-    virtual DBDatasetWrapper* detailWrapper(Object& obj) = 0;
+    virtual DBDatasetWrapper<Dataset>* detailWrapper(Object& obj) = 0;
     /*!
         This method should add new Object to the AssosiativeContainer with the
         passed key and return pointer to added Object.
@@ -160,10 +160,10 @@ public:
     {
         bool result = false;
         Key key;
-        result = ObjectWrapper(nullptr).readKey(*dataset(), key);
+        result = ObjectWrapper(nullptr).readKey(*DBDatasetWrapper<Dataset>::dataset(), key);
         if (result) {
             result = false;
-            Map::iterator i = m_map->find(key);
+            typename Map::iterator i = m_map->find(key);
             if (i != m_map->end()) {
                 if (m_wmap[key].get() !=  nullptr)
                     m_wmap[key]->read();
@@ -171,8 +171,8 @@ public:
             }
             else {
                 Object *p = addObject(key);
-                result = ObjectWrapper(p).read(*dataset());
-                m_wmap[key] = DBDatasetWrapperPtr(detailWrapper(*p));
+                result = ObjectWrapper(p).read(*DBDatasetWrapper<Dataset>::dataset());
+                m_wmap[key] = typename DBDatasetWrapper<Dataset>::DBDatasetWrapperPtr(detailWrapper(*p));
                 if (m_wmap[key].get() !=  nullptr)
                     m_wmap[key]->read();                
             }
@@ -207,7 +207,7 @@ public:
 */
 template<class Dataset, class Object, class ObjectWrapper, class Key,
          class AssosiativeContainer = std::map<Key, Object>, 
-         class WrapperAssosiativeContainer = std::map<Key, DBMasterWrapperAbstract::WrapperPtr> >
+         class WrapperAssosiativeContainer = std::map<Key, typename DBDatasetWrapper<Dataset>::DBDatasetWrapperPtr> >
 class DBMasterWrapper : public DBMasterWrapperAbstract<Dataset, Object, ObjectWrapper, Key,
         AssosiativeContainer, WrapperAssosiativeContainer > {
 public:
@@ -216,7 +216,7 @@ public:
         @param[in] ds Pointer to wrapped dataset.
         @param[in] storage Pointer to the AssosiativeContainer used to store data.
     */
-    DBMasterWrapper(Dataset* ds, Map* storage)
+    DBMasterWrapper(Dataset* ds, AssosiativeContainer* storage)
         :DBMasterWrapperAbstract<Dataset, Object, ObjectWrapper, Key,
          AssosiativeContainer, WrapperAssosiativeContainer >(ds, storage)
     {
@@ -225,8 +225,8 @@ public:
 private:    
     Object* addObject(const Key& key)
     {
-        (*m_map)[key] = Object();
-        return &((*m_map)[key]);
+        (*DBMasterWrapperAbstract<Dataset, Object, ObjectWrapper, Key, AssosiativeContainer, WrapperAssosiativeContainer>::m_map)[key] = Object();
+        return &((*DBMasterWrapperAbstract<Dataset, Object, ObjectWrapper, Key, AssosiativeContainer, WrapperAssosiativeContainer>::m_map)[key]);
     }
 };
 
@@ -256,7 +256,7 @@ private:
 */
 template<class Dataset, class Object, class ObjectWrapper, class Key,
          class AssosiativeContainer = std::map<Key, std::shared_ptr<Object> >, 
-         class WrapperAssosiativeContainer = std::map<Key, DBDatasetWrapper<Dataset>::DBDatasetWrapperPtr> >
+         class WrapperAssosiativeContainer = std::map<Key, typename DBDatasetWrapper<Dataset>::DBDatasetWrapperPtr> >
 class DBMasterWrapperPtr : public DBMasterWrapperAbstract<Dataset, Object, ObjectWrapper, Key,
         AssosiativeContainer, WrapperAssosiativeContainer > {
 public:
@@ -266,7 +266,7 @@ public:
         @param[in] ds Pointer to wrapped dataset.
         @param[in] storage Pointer to the AssosiativeContainer used to store data.
     */
-    DBMasterWrapperPtr(Dataset* ds, Map* storage)
+    DBMasterWrapperPtr(Dataset* ds, AssosiativeContainer* storage)
         :DBMasterWrapperAbstract<Dataset, Object, ObjectWrapper, Key,
             AssosiativeContainer, WrapperAssosiativeContainer >(ds, storage)
     {
@@ -276,7 +276,7 @@ private:
     Object* addObject(const Key& key)
     {
         ObjectPtr p(new Object);
-        (*m_map)[key] = p;
+        (*DBMasterWrapperAbstract<Dataset, Object, ObjectWrapper, Key, AssosiativeContainer, WrapperAssosiativeContainer>::m_map)[key] = p;
         return p.get();
     }
 };
