@@ -24,11 +24,17 @@ namespace dbframework {
 template <class Dataset, class Object, class Container>
 class DBReader2Container : public DBReader2Object<Dataset, Container> {
 protected:    
+    /*!
+        Type of the db reader used to read Object data.
+     */
     typedef DBReader2Object<Dataset, Object> Reader2ObjectType;
+    /*!
+        Db reader used to read Object data.
+     */
     Reader2ObjectType* m_objectReader;
 public:
     /*!
-        Constructs db reader.
+        Constructs db reader without container and db reader for Object.
     */
     DBReader2Container()
         : DBReader2Object<Dataset, Container>(), m_objectReader(nullptr) {};
@@ -36,6 +42,8 @@ public:
         Constructs db reader.
         @param[in] container Pointer to the container that is used to store read data. The DBReader2Container doesn't take
         ownership of container.
+        @param[in] reader Pointer to the db reader used to read Object data. DBReader2Container doesn't take ownership
+        of reader.
     */
     DBReader2Container(Container* container, Reader2ObjectType* reader)
         : DBReader2Object<Dataset, Container>(container), m_objectReader(reader) {};
@@ -49,7 +57,7 @@ public:
     {
         Object obj;
 
-        if (m_objectReader == nullptr)
+        if ((m_objectReader == nullptr) || (m_object == nullptr))
             return false;
 
         m_objectReader->setObject(&obj);
@@ -58,8 +66,15 @@ public:
         }
         return true;
     };
-
+    /*!
+        Get db reader used to read Object data.
+        @return Pointer to db reader used to read Object data.
+    */
     Reader2ObjectType* reader() {return m_objectReader;};
+    /*!
+        Set db reader used to read Object data.
+        @param[in] reader Pointer to db reader. DBReader2Container doesn't take ownership of reader.
+    */
     void setReader(Reader2ObjectType* reader) {m_objectReader = reader;};
 };
 

@@ -48,7 +48,7 @@ protected:
     Reader2ObjectType *m_objectReader;
 public:
     /*!
-        Constructs db reader.
+        Constructs db reader without container and db readers for Key and Object.
     */
     DBReader2Assosiative() : DBReader2Object<Dataset, Container>(), m_objectReader(nullptr), m_keyReader(nullptr) {};
     /*!
@@ -57,7 +57,7 @@ public:
         ownership of container.
         @param[in] objectReader Pointer to the db reader that is used read Object data. The DBReader2Assosiative doesn't take
         ownership of db reader.
-        @param[in] keyReader Pointer to the dbr reader that is used to read Key data. The DBReader2Assosiative doesn't take
+        @param[in] keyReader Pointer to the db reader that is used to read Key data. The DBReader2Assosiative doesn't take
         ownership of db reader.
     */
     DBReader2Assosiative(Container* data, Reader2ObjectType* objectReader, Reader2KeyType* keyReader) :
@@ -82,10 +82,27 @@ public:
         }
         return true;
     };
-
+    /*!
+        Get db reader that is used to read Key data.
+        @return Pointer to the db reader that is used to read Key data.
+     */
     Reader2KeyType* keyReader() {return m_keyReader;};
+    /*!
+        Set db reader that is used to read Key data.
+        @param[in] reader Pointer to the db reader that is used to read Key data. The DBReader2Assosiative doesn't take
+        ownership of db reader.
+     */
     void setKeyReader(Reader2KeyType* reader) {m_keyReader = reader;};
+    /*!
+        Get db reader that is used to read Object data.
+        @return Pointer to the db reader that is used to read Object data.
+     */
     Reader2ObjectType* objectReader() {return m_objectReader;};
+    /*!
+        Set db reader that is used to read Object data.
+        @param[in] reader Pointer to the db reader that is used to read Object data. The DBReader2Assosiative doesn't take
+        ownership of db reader.
+     */
     void setObjectReader(Reader2ObjectType* reader) {m_objectReader = reader;};
 };
 
