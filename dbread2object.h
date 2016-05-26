@@ -25,12 +25,16 @@ protected:
     */
     Object *m_object;
 public:
+    DBReader2Object() : DBReader(), m_object(nullptr) {};
     /*!
         Constructs db reader.
         @param[in] obj Pointer to the object that is used to store read data. The DBReader2Object doesn't take
         ownership of obj.
     */
     DBReader2Object(Object *obj) : DBReader(), m_object(obj) {};
+
+    Object* object() {return m_object;};
+    virtual void setObject(Object* obj) {m_object = obj;};
 };
 
 }

@@ -2,6 +2,7 @@
 #define DBREADER2CONTAINER_H
 
 #include "dbreader.h"
+#include "dbread2object.h"
 
 namespace dbframework {
 

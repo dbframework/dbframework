@@ -2,6 +2,7 @@
 #define DBREADER2ASSOCIATIVE_H
 
 #include "dbreader.h"
+#include "dbread2object.h"
 
 namespace dbframework {
 
@@ -29,20 +30,25 @@ namespace dbframework {
 
     Reader2Key is the DBReader2Object<Dataset, Key> descendant used to read the key from the dataset record.
 */
-template <class Dataset, class Object, class Container, class Reader2Object, class Key, class Reader2Key>
+template <class Dataset, class Object, class Container, class Key>
 class DBReader2Assosiative : public DBReader<Dataset> {
 protected:
     /*!
         Pointer to the container where read data is stored.
     */
     Container* m_data;
+    typedef DBReader2Object<Dataset, Key> Reader2KeyType;
+    Reader2KeyType *m_keyReader;
+    typedef DBReader2Object<Dataset, Object> Reader2ObjectType;
+    Reader2ObjectType *m_objectReader;
 public:
     /*!
         Constructs db reader.
         @param[in] container Pointer to the assosiative container that is used to store read data. The DBReader2Assosiative doesn't take
         ownership of container.
     */
-    DBReader2Assosiative(Container* data) : DBReader<Dataset>(), m_data(data) {};
+    DBReader2Assosiative(Container* data, Reader2ObjectType* objectReader, Reader2KeyType* keyReader) :
+        DBReader<Dataset>(), m_data(data), m_objectReader(objectReader), m_keyReader(keyReader) {};
     /*!
         Creates instance of Key and reads data from dataset to it using Reader2Key instance. Gains accsses to the Object instance using
         operator[] with read key and reads data to the Object instance using Reader2Object instance.
@@ -51,11 +57,11 @@ public:
     */
     bool read(Dataset& ds)
     {
-        Key k;
-        Reader2Key keyReader(&k);
-        if (keyReader.read(ds)) {
-            Reader2Object r(&(*m_data)[k]);
-            r.read(ds);
+        Key k;        
+        m_keyReader->setObject(&k);
+        if (m_keyReader->read(ds)) {
+            m_objectReader->setObject(&(*m_data)[k]);
+            m_objectReader->read(ds);
         }
         return true;
     };
