@@ -25,6 +25,9 @@ protected:
     */
     Object *m_object;
 public:
+    /*!
+        Constructs db reader not assosiated with the object.
+    */
     DBReader2Object() : DBReader(), m_object(nullptr) {};
     /*!
         Constructs db reader.
@@ -32,8 +35,15 @@ public:
         ownership of obj.
     */
     DBReader2Object(Object *obj) : DBReader(), m_object(obj) {};
-
+    /*!
+        Get pointer to object used to store read data.
+        @return Pointer to object used to store read data.
+    */
     Object* object() {return m_object;};
+    /*!
+        Set pointer to object used to store read data.
+        @param[in] obj Pointer to object used to store read data.
+    */
     virtual void setObject(Object* obj) {m_object = obj;};
 };
 
