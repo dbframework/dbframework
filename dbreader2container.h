@@ -60,11 +60,13 @@ public:
         if ((m_objectReader == nullptr) || (m_object == nullptr))
             return false;
 
+        bool result = false;
         m_objectReader->setObject(&obj);
         if (m_objectReader->read(ds)) {
             m_object->push_back(obj);
+            result = true;
         }
-        return true;
+        return result;
     };
     /*!
         Get db reader used to read Object data.

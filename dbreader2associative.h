@@ -72,15 +72,16 @@ public:
     {
         Key k;
 
-        if ((m_keyReader == nullptr) || (m_objectReader == nullptr))
+        if ((m_keyReader == nullptr) || (m_objectReader == nullptr) || (m_object == nullptr))
             return false;
 
+        bool result = false;
         m_keyReader->setObject(&k);
         if (m_keyReader->read(ds)) {
             m_objectReader->setObject(&(*m_object)[k]);
-            m_objectReader->read(ds);
+            result = m_objectReader->read(ds);
         }
-        return true;
+        return result;
     };
     /*!
         Get db reader that is used to read Key data.
