@@ -1,5 +1,5 @@
-#ifndef DBREADER2CONTAINER_H
-#define DBREADER2CONTAINER_H
+#ifndef DBREADER2CONTAINERPTR_H
+#define DBREADER2CONTAINERPTR_H
 
 #include "dbreader.h"
 #include "dbreader2containerbase.h"
@@ -21,13 +21,13 @@ namespace dbframework {
     Container is the class implementing STL-style container of Object. Container must have push_back method
     with one parameter of type Object which adds Object copy to the container.    
 */
-template <class Dataset, class Object, class Container>
-class DBReader2Container : public DBReader2ContainerBase<Dataset, Object, Container> {
+template <class Dataset, class Object, class Container, class ObjectPtr>
+class DBReader2ContainerPtr : public DBReader2ContainerBase<Dataset, Object, Container> {
 public:
     /*!
         Constructs db reader without container and db reader for Object.
     */
-    DBReader2Container()
+    DBReader2ContainerPtr()
         : DBReader2ContainerBase<Dataset, Object, Container>() {};
     /*!
         Constructs db reader.
@@ -36,7 +36,7 @@ public:
         @param[in] reader Pointer to the db reader used to read Object data. DBReader2Container doesn't take ownership
         of reader.
     */
-    DBReader2Container(Container* container, Reader2ObjectType* reader)
+    DBReader2ContainerPtr(Container* container, Reader2ObjectType* reader)
         : DBReader2ContainerBase<Dataset, Object, Container>(container, reader) {};
     /*!
         Creates instance of Object, reads data from dataset to it using Reader2Object instance and then adds Object instance
@@ -46,21 +46,21 @@ public:
     */
     bool read(Dataset &ds)
     {
-        Object obj;
+        ObjectPtr obj(new Object);
 
         if ((m_objectReader == nullptr) || (m_object == nullptr))
             return false;
 
         bool result = false;
-        m_objectReader->setObject(&obj);
+        m_objectReader->setObject(&(*obj));
         if (m_objectReader->read(ds)) {
             m_object->push_back(obj);
             result = true;
         }
         return result;
-    };   
+    };    
 };
 
 };
 
-#endif // DBREADER2CONTAINER_H
+#endif // DBREADER2CONTAINERPTR_H
