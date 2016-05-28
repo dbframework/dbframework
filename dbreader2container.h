@@ -39,7 +39,7 @@ public:
     DBReader2Container(Container* container, Reader2ObjectType* reader)
         : DBReader2ContainerBase<Dataset, Object, Container>(container, reader) {};
     /*!
-        Creates instance of Object, reads data from dataset to it using Reader2Object instance and then adds Object instance
+        Creates instance of Object, reads data from dataset to it using m_objectReader and then adds Object instance
         to the container.
         @param[in] ds Dataset to read from.
         @return Returns true if success.

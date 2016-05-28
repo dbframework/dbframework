@@ -7,7 +7,7 @@
 namespace dbframework {
 
 /*!
-    The DBReader2Container class is a db reader that reads data from the Dataset record to the object and adds
+    The DBReader2ContainerBase class is a base class for db readers that read data from the Dataset record to the object and add
     this object to the container.
 
     Template parameters.

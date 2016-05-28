@@ -7,8 +7,8 @@
 namespace dbframework {
 
 /*!
-    The DBReader2Container class is a db reader that reads data from the Dataset record to the object and adds
-    this object to the container.
+    The DBReader2ContainerPtr class is a db reader that allocates object, reads data from the Dataset record to
+    this object and adds pointer to the object to the container.
 
     Template parameters.
 
@@ -18,8 +18,13 @@ namespace dbframework {
 
     Object is the class used to store data read from the dataset. Object must have default constructor.
 
-    Container is the class implementing STL-style container of Object. Container must have push_back method
-    with one parameter of type Object which adds Object copy to the container.    
+    Container is the class implementing STL-style container of ObjectPtr. Container must have push_back method
+    with one parameter of type ObjectPtr which adds ObjectPtr copy to the container.
+
+    ObjectPtr is Object* or STL-style smart pointer to Object. Second option is preferrable because of automatic memory
+    releasing. If using Object* it is required to release allocated memory before clearing or destroying the Container.
+    ObjectPtr must have constructor with one parameter of type Object*. ObjectPtr must have dereference operator *.
+    STL class shared_ptr meets these requirements.
 */
 template <class Dataset, class Object, class Container, class ObjectPtr>
 class DBReader2ContainerPtr : public DBReader2ContainerBase<Dataset, Object, Container> {

@@ -6,8 +6,8 @@
 namespace dbframework {
 
 /*!
-    The DBReader2Assosiative class is a db reader that reads data from the Dataset record to the object and adds
-    this object to the assosiative container.
+    The DBReader2AssosiativeBase class is a base class for db readers that read data from the Dataset record to the object
+    and add this object to the assosiative container.
 
     Template parameters.
 
@@ -20,7 +20,7 @@ namespace dbframework {
 
     Container is the class implementing STL-style assosiative container of <Key, Object> pairs. Container must have
     [] operator which gives access to the Object by Key. [] operator must add Object instance to the container if
-    container doesn't have Object assosiated to the provided key (default behavior of STL assosiative containers).
+    container doesn't have Object assosiated to the provided key. STL assosiative containers meet these requirements.
 
     Key is the type of the unique key used to identify instances of Object.
 */
@@ -28,12 +28,12 @@ template <class Dataset, class Object, class Container, class Key>
 class DBReader2AssosiativeBase : public DBReader2ContainerBase<Dataset, Object, Container> {
 public:
     /*!
-        Type of the db reader used to read key.
+        Type of the db reader used to read Key.
     */
     typedef DBReader2Object<Dataset, Key> Reader2KeyType;
 protected:
     /*!
-       DB reader used to read key.
+       DB reader used to read Key.
     */
     Reader2KeyType *m_keyReader;
 public:
@@ -43,11 +43,11 @@ public:
     DBReader2AssosiativeBase() : DBReader2ContainerBase<Dataset, Object, Container>(), m_keyReader(nullptr) {};
     /*!
         Constructs db reader.
-        @param[in] container Pointer to the assosiative container that is used to store read data. The DBReader2Assosiative doesn't take
+        @param[in] container Pointer to the assosiative container that is used to store read data. The DBReader2AssosiativeBase doesn't take
         ownership of container.
-        @param[in] objectReader Pointer to the db reader that is used read Object data. The DBReader2Assosiative doesn't take
+        @param[in] objectReader Pointer to the db reader that is used read Object data. The DBReader2AssosiativeBase doesn't take
         ownership of db reader.
-        @param[in] keyReader Pointer to the db reader that is used to read Key data. The DBReader2Assosiative doesn't take
+        @param[in] keyReader Pointer to the db reader that is used to read Key data. The DBReader2AssosiativeBase doesn't take
         ownership of db reader.
     */
     DBReader2AssosiativeBase(Container* data, Reader2ObjectType* objectReader, Reader2KeyType* keyReader) :
@@ -59,7 +59,7 @@ public:
     Reader2KeyType* keyReader() {return m_keyReader;};
     /*!
         Set db reader that is used to read Key data.
-        @param[in] reader Pointer to the db reader that is used to read Key data. The DBReader2Assosiative doesn't take
+        @param[in] reader Pointer to the db reader that is used to read Key data. The DBReader2AssosiativeBase doesn't take
         ownership of db reader.
      */
     void setKeyReader(Reader2KeyType* reader) {m_keyReader = reader;};
