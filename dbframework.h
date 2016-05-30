@@ -17,11 +17,16 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  
 */ 
 
-#include "dbdatasetreader.h"
-#include "dbdatasetwrapper.h"
-#include "dbdatasetwrapperpair.h"
-#include "dbdetailwrapper.h"
-#include "dbdmlquery.h"
-#include "dbmasterwrapper.h"
-#include "dbobjectwrapper.h"
-#include "dbrecordwrapper.h"
+#include "dbreader.h"
+#include "dbread2object.h"
+#include "dbreader2containerbase.h"
+#include "dbreader2container.h"
+#include "dbreader2containerptr.h"
+#include "dbreader2assosiativebase.h"
+#include "dbreader2associative.h"
+#include "dbreader2associativeptr.h"
+#include "dbbinder.h"
+#include "dbbind.h"
+#include "dbbindobject.h"
+#include "dbbinders.h"
+
