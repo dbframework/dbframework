@@ -28,13 +28,13 @@ public:
     /*!
         Constructs db reader not assosiated with the object.
     */
-    DBReader2Object() : DBReader(), m_object(nullptr) {};
+    DBReader2Object() : DBReader<Dataset>(), m_object(nullptr) {};
     /*!
         Constructs db reader.
         @param[in] obj Pointer to the object that is used to store read data. The DBReader2Object doesn't take
         ownership of obj.
     */
-    DBReader2Object(Object *obj) : DBReader(), m_object(obj) {};
+    DBReader2Object(Object *obj) : DBReader<Dataset>(), m_object(obj) {};
     /*!
         Get pointer to object used to store read data.
         @return Pointer to object used to store read data.

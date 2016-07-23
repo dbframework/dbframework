@@ -37,7 +37,7 @@ public:
         @param[in] value Value of the parameter.
      */
     DBBind(const NameType& name, const ValueType& value) :
-        DBBinder(), m_name(name), m_value(value) {};
+        DBBinder<Dataset>::DBBinder(), m_name(name), m_value(value) {};
 };
 
 }

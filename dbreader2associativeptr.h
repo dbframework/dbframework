@@ -31,11 +31,13 @@ namespace dbframework {
 */
 template <class Dataset, class Object, class Container, class Key, class ObjectPtr>
 class DBReader2AssosiativePtr : public DBReader2AssosiativeBase<Dataset, Object, Container, Key> {
+private:
+    typedef DBReader2AssosiativeBase<Dataset, Object, Container, Key> AncestorType;
 public:
     /*!
         Constructs db reader without container and db readers for Key and Object.
     */
-    DBReader2AssosiativePtr() : DBReader2AssosiativeBase<Dataset, Object, Container, Key> {};
+    DBReader2AssosiativePtr() : DBReader2AssosiativeBase<Dataset, Object, Container, Key>() {};
     /*!
         Constructs db reader.
         @param[in] container Pointer to the assosiative container that is used to store read data. The DBReader2AssosiativePtr doesn't take
@@ -45,7 +47,7 @@ public:
         @param[in] keyReader Pointer to the db reader that is used to read Key data. The DBReader2AssosiativePtr doesn't take
         ownership of db reader.
     */
-    DBReader2AssosiativePtr(Container* data, Reader2ObjectType* objectReader, Reader2KeyType* keyReader) :
+    DBReader2AssosiativePtr(Container* data, DBReader2Object<Dataset, Object>* objectReader, DBReader2Object<Dataset, Key>* keyReader) :
         DBReader2AssosiativeBase<Dataset, Object, Container, Key>(data, objectReader, keyReader) {};
     /*!
         Creates instance of Key and reads data from dataset to it using m_keyReader. Gains accsses to the ObjectPtr instance using
@@ -55,17 +57,17 @@ public:
     */
     bool read(Dataset& ds)
     {
-        if ((m_keyReader == nullptr) || (m_objectReader == nullptr) || (m_object == nullptr))
+        if ((AncestorType::m_keyReader == nullptr) || (AncestorType::m_objectReader == nullptr) || (AncestorType::m_object == nullptr))
             return false;
 
         Key k;
         bool result = false;
-        m_keyReader->setObject(&k);
-        if (m_keyReader->read(ds)) {
-            if(!(*m_object)[k])
-                (*m_object)[k] = ObjectPtr(new Object);
-            m_objectReader->setObject(&(*(*m_object)[k]));
-            result = m_objectReader->read(ds);
+        AncestorType::m_keyReader->setObject(&k);
+        if (AncestorType::m_keyReader->read(ds)) {
+            if(!(*AncestorType::m_object)[k])
+                (*AncestorType::m_object)[k] = ObjectPtr(new Object);
+            AncestorType::m_objectReader->setObject(&(*(*AncestorType::m_object)[k]));
+            result = AncestorType::m_objectReader->read(ds);
         }
         return result;
     };

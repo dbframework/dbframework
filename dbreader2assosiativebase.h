@@ -50,7 +50,7 @@ public:
         @param[in] keyReader Pointer to the db reader that is used to read Key data. The DBReader2AssosiativeBase doesn't take
         ownership of db reader.
     */
-    DBReader2AssosiativeBase(Container* data, Reader2ObjectType* objectReader, Reader2KeyType* keyReader) :
+    DBReader2AssosiativeBase(Container* data, DBReader2Object<Dataset, Object>* objectReader, Reader2KeyType* keyReader) :
         DBReader2ContainerBase<Dataset, Object, Container>(data, objectReader), m_keyReader(keyReader) {};
     /*!
         Get db reader that is used to read Key data.

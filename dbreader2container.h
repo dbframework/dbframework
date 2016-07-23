@@ -36,7 +36,7 @@ public:
         @param[in] reader Pointer to the db reader used to read Object data. DBReader2Container doesn't take ownership
         of reader.
     */
-    DBReader2Container(Container* container, Reader2ObjectType* reader)
+    DBReader2Container(Container* container, DBReader2Object<Dataset, Object>* reader)
         : DBReader2ContainerBase<Dataset, Object, Container>(container, reader) {};
     /*!
         Creates instance of Object, reads data from dataset to it using m_objectReader and then adds Object instance
@@ -48,13 +48,13 @@ public:
     {
         Object obj;
 
-        if ((m_objectReader == nullptr) || (m_object == nullptr))
+        if ((DBReader2ContainerBase<Dataset, Object, Container>::m_objectReader == nullptr) || (DBReader2ContainerBase<Dataset, Object, Container>::m_object == nullptr))
             return false;
 
         bool result = false;
-        m_objectReader->setObject(&obj);
-        if (m_objectReader->read(ds)) {
-            m_object->push_back(obj);
+        DBReader2ContainerBase<Dataset, Object, Container>::m_objectReader->setObject(&obj);
+        if (DBReader2ContainerBase<Dataset, Object, Container>::m_objectReader->read(ds)) {
+            DBReader2ContainerBase<Dataset, Object, Container>::m_object->push_back(obj);
             result = true;
         }
         return result;

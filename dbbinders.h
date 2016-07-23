@@ -24,6 +24,7 @@ public:
 private:    
     BinderPtr* m_binders;
     bool m_own;
+    bool m_ownBinders;
 public:
     /*!
         Creates db binder with nested binders passed as the array of pointers.
@@ -31,27 +32,30 @@ public:
         The DBBinders doesn't take ownership of binders.
     */
     DBBinders(BinderPtr* binders) :
-        DBBinder<Dataset>(), m_binders(binders), m_own(false) {};
+        DBBinder<Dataset>(), m_binders(binders), m_own(false), m_ownBinders(false) {};
     /*!
         Creates db binder with 2 nested binders.
-        @param[in] binder1 Pointer to the first binder. The DBBinders doesn't take ownership of it.
-        @param[in] binder2 Pointer to the second binder. The DBBinders doesn't take ownership of it.
+        @param[in] binder1 Pointer to the first binder.
+        @param[in] binder2 Pointer to the second binder.
+        @param[in] own If true DBBinders takes ownership of passed binders.
      */
-    DBBinders(BinderPtr binder1, BinderPtr binder2) : DBBinder<Dataset>()
+    DBBinders(BinderPtr binder1, BinderPtr binder2, bool own = true) : DBBinder<Dataset>()
     {
          m_binders = new BinderPtr[3];
          m_binders[0] = binder1;
          m_binders[1] = binder2;
          m_binders[2] = nullptr;
          m_own = true;
+         m_ownBinders = own;
     };
     /*!
         Creates db binder with 3 nested binders.
-        @param[in] binder1 Pointer to the first binder. The DBBinders doesn't take ownership of it.
-        @param[in] binder2 Pointer to the second binder. The DBBinders doesn't take ownership of it.
-        @param[in] binder3 Pointer to the third binder. The DBBinders doesn't take ownership of it.
+        @param[in] binder1 Pointer to the first binder.
+        @param[in] binder2 Pointer to the second binder.
+        @param[in] binder3 Pointer to the third binder.
+        @param[in] own If true DBBinders takes ownership of passed binders.
      */
-    DBBinders(BinderPtr binder1, BinderPtr binder2, BinderPtr binder3) : DBBinder<Dataset>()
+    DBBinders(BinderPtr binder1, BinderPtr binder2, BinderPtr binder3, bool own = true) : DBBinder<Dataset>()
     {
          m_binders = new BinderPtr[4];
          m_binders[0] = binder1;
@@ -59,15 +63,17 @@ public:
          m_binders[2] = binder3;
          m_binders[3] = nullptr;
          m_own = true;
+         m_ownBinders = own;
     };
     /*!
         Creates db binder with 4 nested binders.
-        @param[in] binder1 Pointer to the first binder. The DBBinders doesn't take ownership of it.
-        @param[in] binder2 Pointer to the second binder. The DBBinders doesn't take ownership of it.
-        @param[in] binder3 Pointer to the third binder. The DBBinders doesn't take ownership of it.
-        @param[in] binder4 Pointer to the fourth binder. The DBBinders doesn't take ownership of it.
+        @param[in] binder1 Pointer to the first binder.
+        @param[in] binder2 Pointer to the second binder.
+        @param[in] binder3 Pointer to the third binder.
+        @param[in] binder4 Pointer to the fourth binder.
+        @param[in] own If true DBBinders takes ownership of passed binders.
      */
-    DBBinders(BinderPtr binder1, BinderPtr binder2, BinderPtr binder3, BinderPtr binder4) : DBBinder<Dataset>()
+    DBBinders(BinderPtr binder1, BinderPtr binder2, BinderPtr binder3, BinderPtr binder4, bool own = true) : DBBinder<Dataset>()
     {
          m_binders = new BinderPtr[5];
          m_binders[0] = binder1;
@@ -76,6 +82,7 @@ public:
          m_binders[3] = binder4;
          m_binders[4] = nullptr;
          m_own = true;
+         m_ownBinders = own;
     };
     /*!
         Destroys db binder.
@@ -83,6 +90,10 @@ public:
     ~DBBinders()
     {
         if (m_binders != nullptr) {
+            if (m_ownBinders)
+            for (BinderPtr* p = m_binders; *p != nullptr; ++p) {
+                delete *p;
+            }
             if (m_own) delete[] m_binders;
         }
     }

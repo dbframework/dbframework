@@ -29,4 +29,5 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dbbind.h"
 #include "dbbindobject.h"
 #include "dbbinders.h"
+#include "dbreadersorted2container.h"
 
