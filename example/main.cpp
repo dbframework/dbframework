@@ -81,7 +81,7 @@ bool printQueries()
                 a.id as account_id, a.ref_customer as account_ref_customer, \
                 t.id as tran_id, t.ref_account as tran_ref_account, t.amount as tran_amount \
                 from (customer c left join account a on c.id = a.ref_customer) left join tran t on a.id = t.ref_account \
-                where c.id = :customer_id" << endl;
+                where c.id = 5" << endl;
         wcout << cf;
     }
     return result;
