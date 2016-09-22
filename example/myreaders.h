@@ -32,7 +32,7 @@ class Reader2AccountWithTrans : public dbframework::DBReader2Object<QSqlQuery, A
 private:
     Reader2Account readAccount;
     Reader2Transaction readTransaction;    
-    dbframework::DBReader2ContainerPtr<QSqlQuery, Transaction, TransactionVector, TransactionPtr> readTransactions;
+    dbframework::DBReader2STLContainerPtr<QSqlQuery, Transaction, TransactionVector, TransactionPtr> readTransactions;
 public:
     Reader2AccountWithTrans() : DBReader2Object<QSqlQuery, AccountWithTrans>(){};
     Reader2AccountWithTrans(AccountWithTrans* a) : DBReader2Object<QSqlQuery, AccountWithTrans>(a){};

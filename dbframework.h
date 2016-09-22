@@ -21,7 +21,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dbread2object.h"
 #include "dbreader2containerbase.h"
 #include "dbreader2container.h"
-#include "dbreader2containerptr.h"
 #include "dbreader2assosiativebase.h"
 #include "dbreader2associative.h"
 #include "dbreader2associativeptr.h"
@@ -31,4 +30,4 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dbbinders.h"
 #include "dbreadersorted2container.h"
 #include "dbreader2stlcontainer.h"
-
+#include "dbreader2stlcontainerptr.h"
