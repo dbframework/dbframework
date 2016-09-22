@@ -55,13 +55,13 @@ public:
     {
         ObjectPtr obj(new Object);
 
-        if ((AncestorType::m_objectReader == nullptr) || (AncestorType::m_object == nullptr))
+        if ((AncestorType::m_objectReader == nullptr) || (AncestorType::m_container == nullptr))
             return false;
 
         bool result = false;
         AncestorType::m_objectReader->setObject(&(*obj));
         if (AncestorType::m_objectReader->read(ds)) {
-            AncestorType::m_object->push_back(obj);
+            AncestorType::m_container->push_back(obj);
             result = true;
         }
         return result;

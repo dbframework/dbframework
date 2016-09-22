@@ -41,7 +41,7 @@ bool Reader2Transaction::read(QSqlQuery& ds)
 bool Reader2AccountWithTrans::read(QSqlQuery& ds)
 {
     readAccount.setObject(&m_object->account);
-    readTransactions.setObject(&m_object->transactions);
+    readTransactions.setContainer(&m_object->transactions);
     readTransactions.setReader(&readTransaction);
 
     bool result = readAccount.read(ds);
@@ -59,7 +59,7 @@ bool QKeyReader::read(QSqlQuery &ds)
 bool Reader2CustomerFullInfo::read(QSqlQuery &ds)
 {
     readCustomer.setObject(m_object);
-    readAccounts.setObject(&m_object->accounts);
+    readAccounts.setContainer(&m_object->accounts);
     readAccounts.setReader(&readAccount);
     readAccounts.setKeyReader(&readKey);
     readKey.field = "account_id";

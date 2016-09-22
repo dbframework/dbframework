@@ -57,16 +57,16 @@ public:
     */
     bool read(Dataset& ds)
     {
-        if ((AncestorType::m_keyReader == nullptr) || (AncestorType::m_objectReader == nullptr) || (AncestorType::m_object == nullptr))
+        if ((AncestorType::m_keyReader == nullptr) || (AncestorType::m_objectReader == nullptr) || (AncestorType::m_container == nullptr))
             return false;
 
         Key k;
         bool result = false;
         AncestorType::m_keyReader->setObject(&k);
         if (AncestorType::m_keyReader->read(ds)) {
-            if(!(*AncestorType::m_object)[k])
-                (*AncestorType::m_object)[k] = ObjectPtr(new Object);
-            AncestorType::m_objectReader->setObject(&(*(*AncestorType::m_object)[k]));
+            if(!(*AncestorType::m_container)[k])
+                (*AncestorType::m_container)[k] = ObjectPtr(new Object);
+            AncestorType::m_objectReader->setObject(&(*(*AncestorType::m_container)[k]));
             result = AncestorType::m_objectReader->read(ds);
         }
         return result;

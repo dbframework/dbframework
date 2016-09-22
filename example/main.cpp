@@ -23,7 +23,7 @@ bool customer(int idmin, int idmax, CustomerVector& v)
 {
     bool result = false;
     Reader2Customer rc;
-    DBReader2Container<QSqlQuery, Customer, CustomerVector> r(&v, &rc);
+    DBReader2STLContainer<QSqlQuery, Customer, CustomerVector> r(&v, &rc);
     DBBinders<QSqlQuery> binder(new QDBBind(":id_min", idmin), new QDBBind(":id_max", idmax), true);
     wchar_t query[] = L"select id as customer_id, name as customer_name from customer where id >= :id_min and id <= :id_max";
     result = db.execSql(query, &r, &binder);

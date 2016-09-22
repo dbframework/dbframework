@@ -157,12 +157,12 @@ typedef std::vector<Customer> CustomerVector;
 >
 Здесь <std::vector> - контейнер из библиотеки STL. Таким образом, требуемая функция будет иметь вид <bool сustomer(int id_min, int id_max, CustomerVector& с)>.
 
-Для считывания данных в <CustomerVector> используем шаблон класса dbframework <DBReader2Container>. <DBReader2Container> позволяет организовать считывание данных в STL-подобный контейнер, имеющий метод push_back. Метод <DBReader2Container.read(...)> считывает запись с помощью экземпляра потомка <DBReader2Object> и помещает считанный объект в контейнер с помощью метода <push_back>. Шаблон <DBReader2Container> имеет следующие параметры:
+Для считывания данных в <CustomerVector> используем шаблон класса dbframework <DBReader2STLContainer>. <DBReader2STLContainer> позволяет организовать считывание данных в STL-совместимый контейнер, имеющий метод push_back. Метод <DBReader2STLContainer.read(...)> считывает запись с помощью экземпляра потомка <DBReader2Object> и помещает считанный объект в контейнер с помощью метода <push_back>. Шаблон <DBReader2STLContainer> имеет следующие параметры:
 <Dataset> - класс, используемый для выполнения запроса, в рассматриваемом случае это <QSqlQuery>;
 <Object> - класс элемента контайнера, в рассматриваемом случае это <Customer>;
 <Container> - класс контейнера, в в рассматриваемом случае это <CustomerVector>.
 
-Таким образом, требуемый класс для считывания это <DBReader2Container<QSqlQuery, Customer, CustomerVector> >.
+Таким образом, требуемый класс для считывания это <DBReader2STLContainer<QSqlQuery, Customer, CustomerVector> >. Отметим, что dbframework позволяет организовать считывание данных не только в контейнеры STL. Для этого нужно унаследовать класс от <DBReader2Container> и реализовать метод <addToContainer>.
 
 В п. 2.3 было показано, как создать класс <QDBBind> для передачи одного параметра. Шаблон класса <DBBinders> позволяет создать класс для передачи любого числа параметров путем комбинирования экземпляров класса <QDBBind>. Шаблон класса <DBBinders> имеет один параметр <Dataset> - класс, используемый для выполнения запроса. Таким образом, требуемый метод может быть реализован следующим образом.
 <
@@ -176,7 +176,7 @@ bool customer(int idmin, int idmax, CustomerVector& v)
 
     //Объект для считывания данных в контейнер. Крнструктор принимает два параметра - указатель на CustomerVector
     //и указатель на Reader2Customer. 
-    DBReader2Container<QSqlQuery, Customer, CustomerVector> r(&v, &rc);
+    DBReader2STLContainer<QSqlQuery, Customer, CustomerVector> r(&v, &rc);
 
     //Объект для передачи параметров. DBBinders имеет несколько конструкторов. В данном примере используется конструктор
     //c 3 параметрами. Первые два - указатели на объекты для передачи параметров. Третий параметр имеет тип bool.

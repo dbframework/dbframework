@@ -6,16 +6,19 @@
 namespace dbframework {
 
 /*!
-    The DBReader2Object class provides the abstract interface for db reader classes, used to read data to
-    sime object.
+    The DBReader template class provides the abstract interface for classes that read SQL-query execution result.
+
+    The DBReader2Object template class is a special desccendant of DBReader. Inherit from DBReader2Object when
+    you implement DBReader descendants that must store SQL-query execution result in the fields of some object.
+    Descendants of DBReader2Object must implement DBReader::read method to read data from the current record of the
+    SQL-query execution result and store it in the object's fields.
+    fields.
 
     Template parameters.
 
-    Dataset is the class that provides access to the data (possibly retrieved by SQL query or stored procedure).
-    It is supposed that the data is organized as some container of records. It is supposed that Dataset provides
-    pointer to the current record and some way to navigate between records.
+    Dataset - see DBReader.
 
-    Object is the class used to store data read from the dataset. Object must have default constructor.
+    Object is the class which instance is used to store data.
 */
 template <class Dataset, class Object>
 class DBReader2Object : public DBReader<Dataset> {
@@ -26,23 +29,24 @@ protected:
     Object *m_object;
 public:
     /*!
-        Constructs db reader not assosiated with the object.
+        Constructs DBReader2Object not assosiated with the object.
     */
     DBReader2Object() : DBReader<Dataset>(), m_object(nullptr) {};
     /*!
-        Constructs db reader.
+        Constructs DBReader2Object assosiated with the object.
         @param[in] obj Pointer to the object that is used to store read data. The DBReader2Object doesn't take
         ownership of obj.
     */
     DBReader2Object(Object *obj) : DBReader<Dataset>(), m_object(obj) {};
     /*!
         Get pointer to object used to store read data.
-        @return Pointer to object used to store read data.
+        @return Pointer to object used to store read data or nullptr if object wasn't assosiated.
     */
     Object* object() {return m_object;};
     /*!
-        Set pointer to object used to store read data.
-        @param[in] obj Pointer to object used to store read data.
+        Assosiate object used to store read data with DBReader2Object instance.
+        @param[in] obj Pointer to object used to store read data. The DBReader2Object doesn't take
+        ownership of obj.
     */
     virtual void setObject(Object* obj) {m_object = obj;};
 };
