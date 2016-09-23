@@ -56,7 +56,7 @@ public:
         @param[in] reader Pointer to the DBReader2Object instance used to read Object data. DBReader2Container doesn't take ownership
         of reader.
     */
-    DBReader2Container(Container* container, DBReader2Object<Dataset, Object>* reader)
+    DBReader2Container(Container* container, typename DBReader2ContainerBase<Dataset, Object, Container>::Reader2ObjectType* reader)
         : DBReader2ContainerBase<Dataset, Object, Container>(container, reader) {};
     /*!
         The DBReader2Container implementation of read method does following:

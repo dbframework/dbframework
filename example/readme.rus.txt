@@ -333,11 +333,11 @@ bool Reader2Transaction::read(QSqlQuery& ds)
 }
 >.
 
-При создании класса для считывания данных в <AccountWithTrans> понадобится реализовать считывание в <TransactionVector>. Для этого можно воспользоваться шаблоном класса <DBReader2ContainerPtr> из dbframework. В отличии от <DBReader2Container>, использовавшегося в п.3, <DBReader2ContainerPtr> предназначен для считывания к контейнер умных указателей. Данный шаблон имеет следующие параметры:
+При создании класса для считывания данных в <AccountWithTrans> понадобится реализовать считывание в <TransactionVector>. Для этого можно воспользоваться шаблоном класса <DBReader2STLContainerPtr> из dbframework. В отличии от <DBReader2STLContainer>, использовавшегося в п.3, <DBReader2STLContainerPtr> предназначен для считывания в контейнер умных указателей. Данный шаблон имеет следующие параметры:
 <Dataset> - класс, используемый для выполнения запроса, в рассматриваемом случае это <QSqlQuery>;
-<Object> - класс, умный указатель на который является элементом контейнера, в рассматриваемом случае это <AccountWithTrans>;
-<Container> - тип контейнера, в рассматриваемом случае это <AccountWithTransMap>;
-<ObjectPtr> - тип умного указателя, в рассматриваемом случае это <AccountWithTransPtr>.
+<Object> - класс, умный указатель на который является элементом контейнера, в рассматриваемом случае это <Transaction>;
+<Container> - тип контейнера, в рассматриваемом случае это <TransactionVector>;
+<ObjectPtr> - тип умного указателя, в рассматриваемом случае это <TransactionPtr>.
 
 Итак, создадим класс для считывания в <AccountWithTrans> следующим образом:
 <
@@ -348,7 +348,7 @@ private:
     //Объект для считывания данных в Transaction
     Reader2Transaction readTransaction;    
     //Объект для считывания данных в TransactionVector
-    dbframework::DBReader2ContainerPtr<QSql1Query, Transaction, TransactionVector, TransactionPtr> readTransactions;
+    dbframework::DBReader2STLContainerPtr<QSql1Query, Transaction, TransactionVector, TransactionPtr> readTransactions;
 public:
     Reader2AccountWithTrans() : DBReader2Object<QSqlQuery, AccountWithTrans>(){};
     Reader2AccountWithTrans(AccountWithTrans* a) : DBReader2Object<QSqlQuery, AccountWithTrans>(a){};
