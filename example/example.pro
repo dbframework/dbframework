@@ -22,6 +22,7 @@ SOURCES += main.cpp \
     mybinders.cpp \
     myreaders.cpp
 
+
 HEADERS += \
     mydatabase.h
 

@@ -19,15 +19,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "dbreader.h"
 #include "dbread2object.h"
-#include "dbreader2containerbase.h"
-#include "dbreader2container.h"
-#include "dbreader2assosiativebase.h"
-#include "dbreader2associative.h"
-#include "dbreader2associativeptr.h"
+#include "dbreader2stlcontainer.h"
+#include "dbreader2stlcontainerptr.h"
+#include "dbreader2stlassociative.h"
+#include "dbreader2stlassociativeptr.h"
+
+//#include "dbreadersorted2container.h"
+
 #include "dbbinder.h"
 #include "dbbind.h"
 #include "dbbindobject.h"
 #include "dbbinders.h"
-#include "dbreadersorted2container.h"
-#include "dbreader2stlcontainer.h"
-#include "dbreader2stlcontainerptr.h"
+
+

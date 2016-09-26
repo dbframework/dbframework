@@ -378,14 +378,14 @@ bool Reader2AccountWithTrans::read(QSqlQuery& ds)
 >.
 Отметим, что в данном примере для простоты взаимосвязи между классами для чтения и хранения данных устанавливаются в методе <read(...)>. Это не эффективно, т.к. данный код выполняется при чтении каждой записи результата выполнения запроса. Правильнее было бы создать для связывания отдельную функцию и вызывать ее в конструкторе <Reader2AccountWithTrans(AccountWithTrans* a)>, а также в переопределенном методе <void Reader2AccountWithTrans::setObject(AccountWithTrans* obj)>.
 
-При создании класса для считывания данных в <CustomerFullInfo> понадобится реализовать считывание в <AccountWithTransMap>. Для этого можно воспользоваться шаблоном класса <DBReader2AssosiativePtr>. Данный шаблон имеет следующие параметры:
+При создании класса для считывания данных в <CustomerFullInfo> понадобится реализовать считывание в <AccountWithTransMap>. Для этого можно воспользоваться шаблоном класса <DBReader2STLAssosiativePtr>. Данный шаблон имеет следующие параметры:
 <Dataset> - класс, используемый для выполнения запроса, в рассматриваемом случае это <QSqlQuery>;
 <Object> - класс, умный указатель на который является элементом контейнера, в рассматриваемом случае это <AccountWithTrans>;
 <Container> - тип контейнера, в рассматриваемом случае это <AccountWithTransMap>;
 <Key> - тип уникального идентификатора объектов класса <Object>, в рассматриваемом случае это <int>;
 <ObjectPtr> - тип умного указателя, в рассматриваемом случае это <AccountWithTransPtr>.
 
-Для считывания данных <DBReader2AssosiativePtr> требуется объект, порожденный от <DBReader2Object<Dataset, Key> >, осуществляющий считывание уникального идентификатора из результата выполнения запроса. Поскольку в нашем примере все идентификаторы объектов имеют тип <int> (поле <id>), создадим один класс для считывания идентификаторов:
+Для считывания данных <DBReader2STLAssosiativePtr> требуется объект, порожденный от <DBReader2Object<Dataset, Key> >, осуществляющий считывание уникального идентификатора из результата выполнения запроса. Поскольку в нашем примере все идентификаторы объектов имеют тип <int> (поле <id>), создадим один класс для считывания идентификаторов:
 <
 //Считывает значение типа int из поля, имя которого задано в QKeyReader::field.
 class QKeyReader : public dbframework::DBReader2Object<QSqlQuery, int> {
@@ -415,7 +415,7 @@ private:
     //Объект для считывания уникального идентификатора
     QKeyReader readKey;
     //Объект для считывания данных в AccountWithTransMap
-    dbframework::DBReader2AssosiativePtr<QSqlQuery, AccountWithTrans, AccountWithTransMap,
+    dbframework::DBReader2STLAssosiativePtr<QSqlQuery, AccountWithTrans, AccountWithTransMap,
         int, AccountWithTransPtr> readAccounts;
 public:
     Reader2CustomerFullInfo() : DBReader2Object<QSqlQuery, CustomerFullInfo>(){};

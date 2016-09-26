@@ -1,66 +1,87 @@
 #ifndef DBREADER2ASSOCIATIVE_H
 #define DBREADER2ASSOCIATIVE_H
 
-#include "dbreader2assosiativebase.h"
+#include "dbreader2containerwithkey.h"
 
 namespace dbframework {
 
 /*!
-    The DBReader2Assosiative class is a db reader that reads data from the Dataset record to the object and adds
-    this object to the assosiative container.
+    The DBReader2Associative class is the base class for implementing DBReader descendants that read SQL query execution
+    result and store it in the Associative container (like STL library map and unordered_map). The reading algorithm is:
+    - read object unique identifier;
+    - get pointer to object stored in the container by its identifier;
+    - read data to the object fields.
+
+    To adapt DBReader2Associative to some container its descendant must implement objectByKey method.
+
+    DBReader2Associative is useful when reading results of a SQL query, containing fields from  joined tables, related as
+    one-to-many. Let's call these tables Master and Detail. Suppose that their records data is represented by classes
+    MasterClass and DetailClass. Suppose that MasterSuperClass is  the descendant of MasterClass, containing a vector
+    of DetailClass. Then the result of the query can be stored in Associative container of MasterSuperClass. And
+    DBReader2Associative descendant can be used to read data to that Associative container. The use of Associative container
+    in this case ensures that the DetailClass instatnce filled from the record data will be added to the vector of
+    corresponding MasterSuperClass instance.
 
     Template parameters.
 
-    Dataset is the class that provides access to the data (possibly retrieved by SQL query or stored procedure).
-    It is supposed that the data is organized as some container of records. It is supposed that Dataset provides
-    pointer to the current record and some way to navigate between records. Every record must contain the key that
-    can be used to unique identify object which is supposed to store record data.
+    Dataset - see DBReader.
 
-    Object is the class used to store data read from the dataset. Object must have default constructor.
+    Object - see DBReader2ContainerBase.
 
-    Container is the class implementing STL-style assosiative container of <Key, Object> pairs. Container must have
-    [] operator which gives access to the Object by Key. [] operator must add Object instance to the container if
-    container doesn't have Object assosiated to the provided key. STL assosiative containers meet these requirements.
+    Container is the class implementing Associative container, which makes it possible to efficently access Object instance
+    by Key value.
 
-    Key is the type of the unique key used to identify instances of Object.    
+    Key is the type of the unique key used to identify instances of Object. If Key is a class then it must have default
+    constructor.
 */
 template <class Dataset, class Object, class Container, class Key>
-class DBReader2Assosiative : public DBReader2AssosiativeBase<Dataset, Object, Container, Key> {
-private:
-    typedef DBReader2AssosiativeBase<Dataset, Object, Container, Key> AncestorType;
+class DBReader2Associative : public DBReader2ContainerWithKey<Dataset, Object, Container, Key> {
+protected:
+    /*!
+        The objectByKey objectByKey method must be implemented in the descendants. It must find the Object instance by the Key value
+        and return pointer to it. If container doesn't has Object with the Key value, objectByKey must add Object instance to the container
+        and return pointer to it.
+        @param key Key value for required Object instance.
+        @return Pointer to Object instance.
+    */
+    virtual Object* objectByKey(const Key& key) = 0;
 public:
     /*!
-        Constructs db reader without container and db readers for Key and Object.
+        Short alias for DBReader2ContainerWithKey<Dataset, Object, Container, Key> type.
     */
-    DBReader2Assosiative() : DBReader2AssosiativeBase<Dataset, Object, Container, Key>() {};
+    typedef DBReader2ContainerWithKey<Dataset, Object, Container, Key> AncestorType;
     /*!
-        Constructs db reader.
-        @param[in] container Pointer to the assosiative container that is used to store read data. The DBReader2Assosiative doesn't take
+        Constructs DBReader2Associative without assosiated container and DBReader2Object instances for Key and Object.
+    */
+    DBReader2Associative() : DBReader2ContainerWithKey<Dataset, Object, Container, Key>() {};
+    /*!
+        Constructs DBReader2Associative with assosiated container and DBReader2Object instances for Key and Object.
+        @param[in] container Pointer to the Associative container that is used to store read data. The DBReader2Associative doesn't take
         ownership of container.
-        @param[in] objectReader Pointer to the db reader that is used read Object data. The DBReader2Assosiative doesn't take
-        ownership of db reader.
-        @param[in] keyReader Pointer to the db reader that is used to read Key data. The DBReader2Assosiative doesn't take
-        ownership of db reader.
+        @param[in] objectReader Pointer to the DBReader2Object descendant instance that is used read Object data. The DBReader2Associative
+        doesn't take ownership of the objectReader.
+        @param[in] keyReader Pointer to the DBReader2Object descendant instance that is used to read Key data. The DBReader2Associative
+        doesn't take ownership of the keyReader.
     */
-    DBReader2Assosiative(Container* data, DBReader2Object<Dataset, Object>* objectReader, DBReader2Object<Dataset, Key>* keyReader) :
-        DBReader2AssosiativeBase<Dataset, Object, Container, Key>(data, objectReader, keyReader) {};
+    DBReader2Associative(Container* data, typename AncestorType::Reader2ObjectType* objectReader, typename AncestorType::Reader2KeyType* keyReader) :
+        DBReader2ContainerWithKey<Dataset, Object, Container, Key>(data, objectReader, keyReader) {};
     /*!
-        Creates instance of Key and reads data from dataset to it using m_keyReader. Gains accsses to the Object instance using
-        operator[] with read key and reads data to the Object instance using m_objectReader.
+        Creates instance of Key and reads data from Dataset instance current record to it using m_keyReader. Gains accsses to the Object instance using
+        objectByKey and reads data to the Object instance using m_objectReader.
         @param[in] ds Dataset to read from.
         @return Returns true if success.
     */
     bool read(Dataset& ds)
     {
-        Key k;
-
-        if ((AncestorType::m_keyReader == nullptr) || (AncestorType::m_objectReader == nullptr) || (AncestorType::m_object == nullptr))
+        if ((AncestorType::m_keyReader == nullptr) || (AncestorType::m_objectReader == nullptr) || (AncestorType::m_container == nullptr))
             return false;
 
+        Key k;
         bool result = false;
+
         AncestorType::m_keyReader->setObject(&k);
         if (AncestorType::m_keyReader->read(ds)) {
-            AncestorType::m_objectReader->setObject(&(*AncestorType::m_object)[k]);
+            AncestorType::m_objectReader->setObject(objectByKey(k));
             result = AncestorType::m_objectReader->read(ds);
         }
         return result;

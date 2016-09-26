@@ -30,7 +30,7 @@ protected:
     */
     void addToContainer(Object* obj)
     {
-        if (obj != nullptr) {
+        if (obj != nullptr) {            
             DBReader2Container<Dataset, Object, Container>::m_container->push_back(*obj);
             delete obj;
         }
