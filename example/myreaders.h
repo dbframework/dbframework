@@ -52,7 +52,7 @@ private:
     Reader2Customer readCustomer;
     Reader2AccountWithTrans readAccount;
     QKeyReader readKey;
-    dbframework::DBReader2STLAssosiativePtr<QSqlQuery, AccountWithTrans, AccountWithTransMap,
+    dbframework::DBReader2STLAssociativePtr<QSqlQuery, AccountWithTrans, AccountWithTransMap,
         int, AccountWithTransPtr> readAccounts;
 public:
     Reader2CustomerFullInfo() : DBReader2Object<QSqlQuery, CustomerFullInfo>(){};

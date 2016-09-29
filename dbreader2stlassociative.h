@@ -25,30 +25,30 @@ namespace dbframework {
     constructor.
 */
 template <class Dataset, class Object, class Container, class Key>
-class DBReader2STLAssosiative : public DBReader2Associative<Dataset, Object, Container, Key> {
+class DBReader2STLAssociative : public DBReader2Associative<Dataset, Object, Container, Key> {
 public:
     /*!
         Short alias for DBReader2Associative<Dataset, Object, Container, Key> type.
     */
     typedef DBReader2Associative<Dataset, Object, Container, Key> AncestorType;
     /*!
-        Constructs DBReader2STLAssosiative without assosiated container and DBReader2Object instances for Key and Object.
+        Constructs DBReader2STLAssociative without assosiated container and DBReader2Object instances for Key and Object.
     */
-    DBReader2STLAssosiative() : DBReader2Associative<Dataset, Object, Container, Key>() {};
+    DBReader2STLAssociative() : DBReader2Associative<Dataset, Object, Container, Key>() {};
     /*!
-        Constructs DBReader2STLAssosiative with assosiated container and DBReader2Object instances for Key and Object.
-        @param[in] container Pointer to the Associative container that is used to store read data. The DBReader2STLAssosiative doesn't take
+        Constructs DBReader2STLAssociative with assosiated container and DBReader2Object instances for Key and Object.
+        @param[in] container Pointer to the Associative container that is used to store read data. The DBReader2STLAssociative doesn't take
         ownership of container.
-        @param[in] objectReader Pointer to the DBReader2Object descendant instance that is used read Object data. The DBReader2STLAssosiative
+        @param[in] objectReader Pointer to the DBReader2Object descendant instance that is used read Object data. The DBReader2STLAssociative
         doesn't take ownership of the objectReader.
-        @param[in] keyReader Pointer to the DBReader2Object descendant instance that is used to read Key data. The DBReader2STLAssosiative
+        @param[in] keyReader Pointer to the DBReader2Object descendant instance that is used to read Key data. The DBReader2STLAssociative
         doesn't take ownership of the keyReader.
     */
-    DBReader2STLAssosiative(Container* data, typename AncestorType::Reader2ObjectType* objectReader, typename AncestorType::Reader2KeyType* keyReader) :
+    DBReader2STLAssociative(Container* data, typename AncestorType::Reader2ObjectType* objectReader, typename AncestorType::Reader2KeyType* keyReader) :
         DBReader2Associative<Dataset, Object, Container, Key>(data, objectReader, keyReader) {};
 protected:
     /*!
-        The DBReader2STLAssosiative implements objectByKey method using Container's operator [].
+        The DBReader2STLAssociative implements objectByKey method using Container's operator [].
         @param key Key value for required Object instance.
         @return Pointer to Object instance.
     */
