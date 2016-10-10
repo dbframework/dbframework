@@ -36,6 +36,8 @@ namespace dbframework {
 */
 template <class Dataset, class Object, class Container, class Key>
 class DBReader2Associative : public DBReader2ContainerWithKey<Dataset, Object, Container, Key> {
+private:
+    typedef DBReader2ContainerWithKey<Dataset, Object, Container, Key> AncestorType;
 protected:
     /*!
         The objectByKey objectByKey method must be implemented in the descendants. It must find the Object instance by the Key value
@@ -46,10 +48,6 @@ protected:
     */
     virtual Object* objectByKey(const Key& key) = 0;
 public:
-    /*!
-        Short alias for DBReader2ContainerWithKey<Dataset, Object, Container, Key> type.
-    */
-    typedef DBReader2ContainerWithKey<Dataset, Object, Container, Key> AncestorType;
     /*!
         Constructs DBReader2Associative without assosiated container and DBReader2Object instances for Key and Object.
     */

@@ -26,11 +26,9 @@ namespace dbframework {
 */
 template <class Dataset, class Object, class Container, class Key>
 class DBReader2STLAssociative : public DBReader2Associative<Dataset, Object, Container, Key> {
-public:
-    /*!
-        Short alias for DBReader2Associative<Dataset, Object, Container, Key> type.
-    */
+private:
     typedef DBReader2Associative<Dataset, Object, Container, Key> AncestorType;
+public:
     /*!
         Constructs DBReader2STLAssociative without assosiated container and DBReader2Object instances for Key and Object.
     */

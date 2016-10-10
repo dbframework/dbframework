@@ -23,9 +23,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dbreader2stlcontainerptr.h"
 #include "dbreader2stlassociative.h"
 #include "dbreader2stlassociativeptr.h"
-
-//#include "dbreadersorted2container.h"
-
+#include "dbreader2indexedstlcontainerptr.h"
 #include "dbbinder.h"
 #include "dbbind.h"
 #include "dbbindobject.h"

@@ -31,11 +31,9 @@ namespace dbframework {
 */
 template <class Dataset, class Object, class Container, class Key, class ObjectPtr>
 class DBReader2STLAssociativePtr : public DBReader2Associative<Dataset, Object, Container, Key> {
-public:
-    /*!
-        Short alias for DBReader2Associative<Dataset, Object, Container, Key> type.
-    */
+private:
     typedef DBReader2Associative<Dataset, Object, Container, Key> AncestorType;
+public:
     /*!
         Constructs DBReader2STLAssociative without assosiated container and DBReader2Object instances for Key and Object.
     */
@@ -58,11 +56,13 @@ protected:
         @return Pointer to Object instance.
     */
     Object* objectByKey(const Key& key)
-    {        
-        if ( (*AncestorType::m_container)[key] == nullptr) {
-            (*AncestorType::m_container)[key] = ObjectPtr(new Object);
+    {
+        ObjectPtr p = (*AncestorType::m_container)[key];
+        if (p == nullptr) {
+            p = ObjectPtr(new Object);
+            (*AncestorType::m_container)[key] = p;
         }
-        return &(*(*AncestorType::m_container)[key]);
+        return &(*p);
     }
 
 };
