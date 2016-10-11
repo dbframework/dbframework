@@ -4,29 +4,29 @@
 namespace dbframework {
 
 /*!
-    The DBBinder class provides the abstract interface for db binder classes.
-    DB binder classes implement the binding of the SQL query parameters with values.
+    The DBBinder template class provides the abstract interface for classes that
+    implement binding of the SQL query parameters with values.  Usually you shouldn't
+    inherit from DBBinder directly. It is recommended to inherit from one of its specialized descendants.
 
     Template parameters.
 
-    Dataset is the class that provides execution of a SQL query or a stored procedure.
-    It is supposed that it can have parameters and supports binding of parameters with
-    values.
+    Dataset is the class that implements SQL query execution and parameters binding.
 */
 template <class Dataset>
 class DBBinder {
 public:
     /*!
-         Constructs an abstract db binder.
+         Constructs DBBinder instance.
      */
     DBBinder(){};
     /*!
-        Destroys an abstract db binder.
+        Destroys DBBinder.
     */
     virtual ~DBBinder(){};
     /*!
-        Binds Dataset parameters with values.
-        @param[in] dataset Dataset which parameters are binded.
+        This abstract method must be implemented by the descendants. It must perform parameters
+        binding using provided Dataset object.
+        @param[in] dataset Dataset object which is used to perform parameters binding.
      */
     virtual void bind(Dataset& dataset) = 0;
 };

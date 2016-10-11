@@ -6,14 +6,12 @@
 namespace dbframework {
 
 /*!
-    The DBBind class is a base class for implementing db binders that bind Dataset parameter,
+    The DBBind class is a base class for implementing DBBinder descendants that bind one parameter,
     identified by name, with the value.
 
     Template parameters.
 
-    Dataset is the class that provides execution of a SQL query or a stored procedure.
-    It is supposed that it can have parameters and supports binding of parameters with
-    values.
+    Dataset - see DBBinder
 
     NameType is a type that represents parameter name.
 
@@ -32,7 +30,7 @@ protected:
     ValueType m_value;
 public:
     /*!
-        Constructs db binder.
+        Constructs DBBind.
         @param[in] name Name of the parameter.
         @param[in] value Value of the parameter.
      */

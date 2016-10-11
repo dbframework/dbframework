@@ -6,29 +6,28 @@
 namespace dbframework {
 
 /*!
-    The DBBindObject class is a base class for implementing db binders that bind Dataset parameters
+    The DBBindObject template class is a base class for implementing DBBinder descendants that bind
+    SQL query parameters with the members of some class instance.
     with some class instance data.
 
     Template parameters.
 
-    Dataset is the class that provides execution of a SQL query or a stored procedure.
-    It is supposed that it can have parameters and supports binding of parameters with
-    values.
+    Dataset - see DBBinder.
 
-    Object is the class which data is binded with the Dataset parameters.
+    Object is the class which members are binded with the SQL query parameters.
 */
 template <class Dataset, class Object>
 class DBBindObject : public DBBinder<Dataset> {
 protected:
     /*!
-        Object instance which is binded with Dataset parameters.
+        Object instance which members are binded with SQL query parameters.
      */
     Object* m_object;
 public:
     /*!
-        Creates db binder.
-        @param[in] object Object instance which data is binded with Dataset parameters. The DBBindObject
-        doesn't take ownership of object.
+        Creates DBBindObject instance.
+        @param[in] object Pointer to Object instance which members are binded with SQL query parameters.
+        The DBBindObject doesn't take ownership of object.
      */
     DBBindObject(Object* object) : DBBinder<Dataset>(), m_object(object) {};
 };
