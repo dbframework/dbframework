@@ -1,26 +1,4 @@
-﻿/*
-Copyright (c) 2015, 2016 Sidorov Dmitry
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction, 
-including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial 
-portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN 
-NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  
-*/ 
-
-/*!
-\file dbframework.h
-\mainpage 
-Introduction
+﻿Introduction
 ========
 
 dbframework is a small C++ framework, designed for implementing object-relational mapping (ORM) in applications that interact with relational DBMS. Unlike many ORM implementations, dbframework doesn't implement automatic creation of database tables. Main purpose of this framework is to simplify creation of code for reading execution results of SQL queries that join several tables into complex hierarchical data structures. Here complex hierarchical data structure means class with members that are containers, which contain instances of other classes that in their turn have container members etc.
@@ -72,34 +50,5 @@ ORM implementation using dbframework can be divided into 4 stages.
 In this way, the SQL query execution is reduced to creation of suitable Reader and Binder.
 
 The example subdirectory contains the example of application using dbframework. 
-*/
 
-#ifndef DBFRAMEWORK_H
-#define DBFRAMEWORK_H
-
-#include "dbreader.h"
-#include "dbread2object.h"
-#include "dbreader2stlcontainer.h"
-#include "dbreader2stlcontainerptr.h"
-#include "dbreader2stlassociative.h"
-#include "dbreader2stlassociativeptr.h"
-#include "dbreader2indexedstlcontainerptr.h"
-#include "dbbinder.h"
-#include "dbbind.h"
-#include "dbbindobject.h"
-#include "dbbinders.h"
-
-namespace dbframework {
-
-/*!    
-    dbframework major version.
-*/
-#define VERSION_MAJOR 1
-/*!
-    dbframework minor version.
-*/
-#define VERSION_MINOR 0
-
-}
-
-#endif //DBFRAMEWORK_H
+The docs subdirectory contains dbframework documentation in html format. Documentation can be generated in other formats by processing header files with doxygen.
