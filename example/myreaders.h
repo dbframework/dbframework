@@ -51,9 +51,9 @@ class Reader2CustomerFullInfo : public dbframework::DBReader2Object<QSqlQuery, C
 private:
     Reader2Customer readCustomer;
     Reader2AccountWithTrans readAccount;
-    QKeyReader readKey;
-    dbframework::DBReader2STLAssociativePtr<QSqlQuery, AccountWithTrans, AccountWithTransMap,
-        int, AccountWithTransPtr> readAccounts;
+    QKeyReader readKey;    
+    dbframework::DBReader2IndexedSTLContainerPtr<QSqlQuery, AccountWithTrans, AccountWithTransVector,
+        int, AccountWithTransPtr, AccountWithTransMap> readAccounts;
 public:
     Reader2CustomerFullInfo() : DBReader2Object<QSqlQuery, CustomerFullInfo>(){};
     Reader2CustomerFullInfo(CustomerFullInfo* c) : DBReader2Object<QSqlQuery, CustomerFullInfo>(c){};

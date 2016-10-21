@@ -40,10 +40,11 @@ public:
 
 typedef std::shared_ptr<AccountWithTrans> AccountWithTransPtr;
 typedef std::map<int, AccountWithTransPtr> AccountWithTransMap;
+typedef std::vector<AccountWithTransPtr> AccountWithTransVector;
 
 class CustomerFullInfo : public Customer {
-public:
-    AccountWithTransMap accounts;
+public:    
+    AccountWithTransVector accounts;
 };
 
 std::wostream& operator<<(std::wostream& os, const Customer& obj);
