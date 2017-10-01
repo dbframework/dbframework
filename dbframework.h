@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2015, 2016 Sidorov Dmitry
+Copyright (c) 2015-2017 Sidorov Dmitry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -64,7 +64,7 @@ Binders are used in the following way. Before SQL query execution Binder instanc
 
 ORM implementation using dbframework can be divided into 4 stages.
 
-1. Creation of the subroutine that controls SQL query execution. This subroutine must have following parameters: SQL query, Binder and Reader. The subroutine must bind SQL query parameters by calling Binder.bind(...), execute SQL query and call Reader.read(...) for each record of query execution result. Later the execution of every SQL query can be done by this subroutine by providing suitable Binder and Reader.
+1. Creation of the subroutine that controls SQL query execution. This subroutine must have following parameters: SQL query, Binder and Reader. The subroutine must bind SQL query parameters by calling Binder.bind(...), execute SQL query and call Reader.read(...) for each record of query execution result. Later the execution of every SQL query can be done by this subroutine by providing suitable Binder and Reader. Easiest way to do this is to inherit from dbframework::DBSQLExecutor.
 2. Creation of the Binder for each simple class. Easiest way to do this is to inherit from template class dbframework::DBBindObject. This stage is optional. If it isn't supposed to execute SQL queries with many parameters binded with the fields of some object, then one can use class templates dbframework::DBBind and dbframework::DBBinders.  
 3. Creation of the Reader for each simple class. Such Reader must store data into simple class members. This Reader can be implemented by inheriting from dbframework::DBReader2Object.
 4. Selection of the complex class for storing data for each SQL query. Creation of the Reader for selected complex class. Such Reader can be implemented by combining Readers for simple classes and dbframework Reader class templates for storing data into containers.
@@ -88,6 +88,10 @@ The example subdirectory contains the example of application using dbframework.
 #include "dbbind.h"
 #include "dbbindobject.h"
 #include "dbbinders.h"
+#include "dbreaderpair.h"
+#include "dbsqlgeneratorimpl.h"
+#include "dbsqlexec.h"
+#include "dbobjectdescriptorimpl.h"
 
 namespace dbframework {
 
@@ -98,7 +102,7 @@ namespace dbframework {
 /*!
     dbframework minor version.
 */
-#define VERSION_MINOR 0
+#define VERSION_MINOR 1
 
 }
 

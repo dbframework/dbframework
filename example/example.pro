@@ -20,10 +20,12 @@ SOURCES += main.cpp \
     mydatabase.cpp \
     testtypes.cpp \
     mybinders.cpp \
-    myreaders.cpp
+    myreaders.cpp \
+    mydescriptors.cpp
 
 
 HEADERS += \
-    mydatabase.h
+    mydatabase.h \
+    mydescriptors.h
 
 INCLUDEPATH += ..

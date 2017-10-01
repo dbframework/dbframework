@@ -101,25 +101,14 @@ In this example the function for data reading control is implemented as <MyDatab
 */
 bool MyDatabase::execSql(wchar_t *sql, DBReader<QSqlQuery>* reader, DBBinder<QSqlQuery>* binder)
 {
-    //Create object for query execution linked with previously opened database.
     QSqlQuery q(db);
-    bool result = true;
+    bool result = q.prepare(QString::fromStdWString(sql));
 
-    //Prepare the query.
-    if(result)
-        result = q.prepare(QString::fromStdWString(sql));
-    //Bind parameters if binder != nullptr.
-    if (result && (binder != nullptr))
-        binder->bind(q);
-    //Execute query
     if (result)
-        result = q.exec();
-    //If reader != nullptr iterate through records of query execution result and read each record
-    //by calling reader->read(...).
-    for (;result && q.next();) {
-        result = reader->read(q);
-    }
-    return result;
+        //Using DBSQLExecutor descendant for executing query.
+        result = MySQLExec().exec(q, binder, reader);
+
+    return result;    
 }
 >
 
@@ -513,5 +502,6 @@ example.pro - project file used to build example using Qt SDK.
 mybinders.h, mybinders.cpp - parameter binding classes <QDBBind>, <QDBBinders>, <CustomerBinder>.
 mydatabase.h, mydatabase.cpp - class <MyDatabase> that implements database creation and filling, query execution.
 myreaders.h, myreaders.cpp - classes for data reading <Reader2Customer>, <Reader2Account>, <Reader2Transaction>, <Reader2AccountWithTrans>, <QKeyReader>, <Reader2CustomerFullInfo>.
+mydescriptors.h, mydescriptors.cpp - class <MyDescriptor> describing database table structure.
 testtypes.h, testtypes.cpp - classes <Customer>, <Account>, <Transaction>, <AccountWithTrans>, <CustomerFullInfo>.
 main.cpp - functions <customer>, function <wmain>.

@@ -102,7 +102,7 @@ protected:
         if (p == nullptr) {
             p = ObjectPtr(new Object);
             m_index[key] = p;
-            m_container->push_back(p);
+            AncestorType::m_container->push_back(p);
         }
         return &(*p);
     };

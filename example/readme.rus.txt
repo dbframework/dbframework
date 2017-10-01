@@ -100,25 +100,14 @@ void QDBBind::bind(QSqlQuery& dataset)
 */
 bool MyDatabase::execSql(wchar_t *sql, DBReader<QSqlQuery>* reader, DBBinder<QSqlQuery>* binder)
 {
-    //Создаем объект для выполнения запроса, связанный с заранее открытой базой данных.
     QSqlQuery q(db);
-    bool result = true;
+    bool result = q.prepare(QString::fromStdWString(sql));
 
-    //Подготавливаем запрос.
-    if(result)
-        result = q.prepare(QString::fromStdWString(sql));
-    //Задаем значения параметров если binder != nullptr.
-    if (result && (binder != nullptr))
-        binder->bind(q);
-    //Выполняем запрос
     if (result)
-        result = q.exec();
-    //Если reader != nullptr, перебираем записиси результата запроса и считываем каждую
-    //вызовом reader->read(...).
-    for (;result && q.next();) {
-        result = reader->read(q);
-    }
-    return result;
+        //Для выполнения запроса используем потомка DBSQLExecutor 
+        result = MySQLExec().exec(q, binder, reader);
+
+    return result;    
 }
 >
 
@@ -511,5 +500,6 @@ example.pro - файл проекта для компиляции примера
 mybinders.h, mybinders.cpp - классы для передачи параметров <QDBBind>, <QDBBinders>, <CustomerBinder>.
 mydatabase.h, mydatabase.cpp - класс <MyDatabase>, осуществляющий создание и заполнение БД, выполнение запросов.
 myreaders.h, myreaders.cpp - клаccы для чтения данных <Reader2Customer>, <Reader2Account>, <Reader2Transaction>, <Reader2AccountWithTrans>, <QKeyReader>, <Reader2CustomerFullInfo>.
+mydescriptors.h, mydescriptors.cpp - класс <MyDescriptor> для описания структуры таблицы в БД.
 testtypes.h, testtypes.cpp - классы <Customer>, <Account>, <Transaction>, <AccountWithTrans>, <CustomerFullInfo>.
 main.cpp - функции <customer>, функция <wmain>.

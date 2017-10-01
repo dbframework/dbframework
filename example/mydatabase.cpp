@@ -2,10 +2,12 @@
 #include <QSqlQuery>
 #include <QTime>
 #include <QVariant>
+#include "mybinders.h"
+#include "mydescriptors.h"
 
 using namespace dbframework;
 
-char* scriptDBCreate[] = {
+const char* scriptDBCreate[] = {
     "drop table if exists tran",
 
     "drop table if exists account",
@@ -32,12 +34,15 @@ char* scriptDBCreate[] = {
     nullptr
 };
 
-char* scriptDBFill[] = {    
-    "insert into customer values(:id, :name)",
-    "insert into account values(:id, :ref_customer)",
-    "insert into tran values(:id, :ref_account, :amount)",
-    nullptr
-};
+bool MySQLExec::executeQuery(QSqlQuery& ds)
+{
+    return ds.exec();
+}
+
+bool MySQLExec::next(QSqlQuery& ds)
+{
+    return ds.next();
+}
 
 MyDatabase::MyDatabase()
 {
@@ -59,29 +64,25 @@ bool MyDatabase::open(wchar_t* fileName)
     return result;
 }
 
-bool MyDatabase::execScript(char** script)
+bool MyDatabase::execScript(const char** script)
 {
     bool result = true;
-    for(char** sql = script; (*sql != nullptr) && result; ++sql){
+    for(const char** sql = script; (*sql != nullptr) && result; ++sql){
         result = execSql(QString(*sql));
     }
     return result;
 }
 
 bool MyDatabase::execSql(QString sql)
-{
-    QSqlQuery q(db);
-
-    bool result = q.prepare(sql);
-    if (result)
-        result = q.exec();
-    return result;
+{    
+    return execSql(sql.toStdWString().c_str(), nullptr, nullptr);
 }
 
 bool MyDatabase::fillDB(int customerCnt, int accountCnt,
                         int tranCnt)
 {
     bool result = true;
+    DBSQLGeneratorImpl<std::string, size_t> SQLGen;
     QTime midnight(0,0,0);
     qsrand(midnight.secsTo(QTime::currentTime()));
 
@@ -91,33 +92,33 @@ bool MyDatabase::fillDB(int customerCnt, int accountCnt,
         result = db.transaction();
 
     if (result) {
-        //fill customer
-        result = q.prepare(QString(scriptDBFill[0]));
-        for (int i = 0; (i < customerCnt) && result; ++i) {
-            q.bindValue(":id", i);
-            q.bindValue(":name", "customer" + QString::number(i));
-            result = q.exec();
+        //fill customer        
+        Customer c;
+        for (int i = 0; (i < customerCnt) && result; ++i) {            
+            c.id = i;
+            c.name = QString(QString("customer") + QString::number(i)).toStdWString();            
+            result = execSql(SQLGen.insert(&DescriptorCustomer, true).c_str(), nullptr, &CustomerBinder(&c));
         }
     }
 
     if (result) {
-        //fill account
-        result = q.prepare(QString(scriptDBFill[1]));
-        for (int i = 0; (i < accountCnt) && result; ++i) {
-            q.bindValue(":id", i);
-            q.bindValue(":ref_customer", qrand() % customerCnt);
-            result = q.exec();
+        Account acc;
+        //fill account        
+        for (int i = 0; (i < accountCnt) && result; ++i) {            
+            acc.id = i;
+            acc.ref_customer = qrand() % customerCnt;
+            result = execSql(SQLGen.insert(&DescriptorAccount, true).c_str(), nullptr, &AccountBinder(&acc));
         }
     }
 
     if (result) {
         //fill tran
-        result = q.prepare(QString(scriptDBFill[2]));
+        Transaction t;
         for (int i = 0; (i < tranCnt) && result; ++i) {
-            q.bindValue(":id", i);
-            q.bindValue(":ref_account", qrand() % accountCnt);
-            q.bindValue(":amount", qrand() % 10);
-            result = q.exec();
+            t.id = i;
+            t.ref_account = qrand() % accountCnt;
+            t.amount = 1 + qrand() % 10;
+            result = execSql(SQLGen.insert(&DescriptorTransaction, true).c_str(), nullptr, &TransactionBinder(&t));
         }
     }
 
@@ -131,19 +132,24 @@ bool MyDatabase::fillDB(int customerCnt, int accountCnt,
     return result;
 }
 
-bool MyDatabase::execSql(wchar_t *sql, DBReader<QSqlQuery>* reader, DBBinder<QSqlQuery>* binder)
+bool MyDatabase::execSql(const wchar_t *sql, DBReader<QSqlQuery>* reader, DBBinder<QSqlQuery>* binder)
 {
     QSqlQuery q(db);
-    bool result = true;
+    bool result = q.prepare(QString::fromStdWString(sql));
 
-    if(result)
-        result = q.prepare(QString::fromStdWString(sql));
-    if (result && (binder != nullptr))
-        binder->bind(q);
     if (result)
-        result = q.exec();
-    for (;(reader != nullptr) && result && q.next();) {
-        result = reader->read(q);
-    }
+        result = MySQLExec().exec(q, binder, reader);
+
+    return result;
+}
+
+bool MyDatabase::execSql(const char *sql, DBReader<QSqlQuery>* reader, DBBinder<QSqlQuery>* binder)
+{
+    QSqlQuery q(db);
+    bool result = q.prepare(QString::fromStdString(sql));
+
+    if (result)
+        result = MySQLExec().exec(q, binder, reader);
+
     return result;
 }

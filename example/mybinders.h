@@ -20,9 +20,17 @@ public:
     void bind(QSqlQuery& dataset);
 };
 
+class AccountBinder : public dbframework::DBBindObject<QSqlQuery, Account> {
+public:
+    AccountBinder(Account* acc):DBBindObject<QSqlQuery, Account>(acc){};
+    void bind(QSqlQuery& dataset);
+};
 
-
-
+class TransactionBinder : public dbframework::DBBindObject<QSqlQuery, Transaction> {
+public:
+    TransactionBinder(Transaction* t):DBBindObject<QSqlQuery, Transaction>(t){};
+    void bind(QSqlQuery& dataset);
+};
 
 
 #endif // MYBINDERS_H
